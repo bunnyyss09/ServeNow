@@ -267,4 +267,46 @@ public class Booking extends BaseEntity {
             estimatedDurationMinutes = service.getEstimatedDurationMinutes();
         }
     }
+
+    // Convenience methods for BookingService compatibility
+    public Long getCustomerId() {
+        return customer != null ? customer.getId() : null;
+    }
+
+    public void setCustomerId(Long customerId) {
+        // This is a convenience method - actual customer should be set via setCustomer()
+    }
+
+    public Long getProviderId() {
+        return provider != null ? provider.getId() : null;
+    }
+
+    public void setProviderId(Long providerId) {
+        // This is a convenience method - actual provider should be set via setProvider()
+    }
+
+    public LocalDateTime getScheduledAt() {
+        return scheduledDateTime;
+    }
+
+    public void setScheduledAt(LocalDateTime scheduledAt) {
+        this.scheduledDateTime = scheduledAt;
+    }
+
+    public String getNotes() {
+        return customerNotes;
+    }
+
+    public void setNotes(String notes) {
+        this.customerNotes = notes;
+    }
+
+    public BigDecimal getTotalAmount() {
+        return finalPrice != null ? finalPrice : quotedPrice;
+    }
+
+    public void setTotalAmount(BigDecimal totalAmount) {
+        this.quotedPrice = totalAmount;
+        this.finalPrice = totalAmount;
+    }
 }

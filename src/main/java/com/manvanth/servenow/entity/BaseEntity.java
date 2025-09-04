@@ -52,4 +52,13 @@ public abstract class BaseEntity {
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
+
+    // Convenience methods for isActive field
+    public Boolean getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(Boolean isActive) {
+        this.isActive = isActive;
+    }
 }

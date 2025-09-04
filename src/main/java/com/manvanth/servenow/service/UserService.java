@@ -22,6 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -63,22 +64,39 @@ public class UserService implements UserDetailsService {
         }
 
         // Convert DTO to entity
+        log.debug("Converting RegisterRequest to User entity");
         User user = userMapper.toUser(registerRequest);
+        log.debug("User entity created, checking roles initialization");
+        
+        // Ensure roles set is initialized (MapStruct might override the default initialization)
+        if (user.getRoles() == null) {
+            log.debug("Roles set was null, initializing");
+            user.setRoles(new HashSet<>());
+        } else {
+            log.debug("Roles set already initialized with size: {}", user.getRoles().size());
+        }
         
         // Encode password
+        log.debug("Encoding password");
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
+        log.debug("Password encoded successfully");
 
         // Assign role based on user type
+        log.debug("Looking for role: {}", registerRequest.getUserType());
         var roleOptional = roleRepository.findByNameAndIsActiveTrue(registerRequest.getUserType());
         if (roleOptional.isEmpty()) {
+            log.error("Role not found: {}", registerRequest.getUserType());
             throw new ResourceNotFoundException("Role", "name", registerRequest.getUserType());
         }
+        log.debug("Found role: {}", roleOptional.get().getName());
         user.getRoles().add(roleOptional.get());
 
         // Save user
+        log.debug("Saving user to database");
         User savedUser = userRepository.save(user);
         log.info("User registered successfully with ID: {}", savedUser.getId());
 
+        log.debug("Converting saved user to response DTO");
         return userMapper.toUserResponse(savedUser);
     }
 

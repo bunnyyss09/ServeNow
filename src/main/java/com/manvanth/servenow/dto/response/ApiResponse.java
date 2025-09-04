@@ -31,20 +31,20 @@ public class ApiResponse<T> {
         return new ApiResponse<>(true, message, data, LocalDateTime.now(), null, 200);
     }
 
-    public static <T> ApiResponse<T> success(String message) {
+    public static ApiResponse<Object> success(String message) {
         return new ApiResponse<>(true, message, null, LocalDateTime.now(), null, 200);
     }
 
     // Error response constructors
-    public static <T> ApiResponse<T> error(String message) {
+    public static ApiResponse<Object> error(String message) {
         return new ApiResponse<>(false, message, null, LocalDateTime.now(), null, 400);
     }
 
-    public static <T> ApiResponse<T> error(String message, Integer statusCode) {
+    public static ApiResponse<Object> error(String message, Integer statusCode) {
         return new ApiResponse<>(false, message, null, LocalDateTime.now(), null, statusCode);
     }
 
-    public static <T> ApiResponse<T> error(String message, String path, Integer statusCode) {
+    public static ApiResponse<Object> error(String message, String path, Integer statusCode) {
         return new ApiResponse<>(false, message, null, LocalDateTime.now(), path, statusCode);
     }
 

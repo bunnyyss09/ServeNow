@@ -66,4 +66,25 @@ public class RegisterRequest {
     public boolean isPasswordConfirmed() {
         return password != null && password.equals(confirmPassword);
     }
+
+    // Convenience methods for compatibility
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public String getUserType() {
+        return userType;
+    }
+
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
 }

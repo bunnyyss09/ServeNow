@@ -32,4 +32,13 @@ public class ChangePasswordRequest {
     public boolean isDifferentFromCurrent() {
         return currentPassword != null && !currentPassword.equals(newPassword);
     }
+
+    // Convenience methods for compatibility
+    public String getCurrentPassword() {
+        return currentPassword;
+    }
+
+    public String getNewPassword() {
+        return newPassword;
+    }
 }

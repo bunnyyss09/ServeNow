@@ -43,4 +43,16 @@ public class UpdateUserRequest {
     private Double longitude;
 
     private String profileImageUrl;
+
+    // Convenience methods for compatibility
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public String getFullName() {
+        if (firstName != null && lastName != null) {
+            return firstName + " " + lastName;
+        }
+        return null;
+    }
 }

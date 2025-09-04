@@ -32,7 +32,7 @@ public class GlobalExceptionHandler {
      * Handle validation errors from @Valid annotations
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiResponse<Map<String, String>>> handleValidationException(
+    public ResponseEntity<ApiResponse<Object>> handleValidationException(
             MethodArgumentNotValidException ex, WebRequest request) {
         
         log.warn("Validation error: {}", ex.getMessage());
@@ -44,7 +44,7 @@ public class GlobalExceptionHandler {
             errors.put(fieldError.getField(), fieldError.getDefaultMessage());
         }
         
-        ApiResponse<Map<String, String>> response = ApiResponse.<Map<String, String>>error(
+        ApiResponse<Object> response = ApiResponse.error(
             "Validation failed", HttpStatus.BAD_REQUEST.value())
             .withPath(request.getDescription(false));
         response.setData(errors);
@@ -56,7 +56,7 @@ public class GlobalExceptionHandler {
      * Handle constraint validation errors
      */
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ApiResponse<Map<String, String>>> handleConstraintViolationException(
+    public ResponseEntity<ApiResponse<Object>> handleConstraintViolationException(
             ConstraintViolationException ex, WebRequest request) {
         
         log.warn("Constraint violation: {}", ex.getMessage());
@@ -70,7 +70,7 @@ public class GlobalExceptionHandler {
             errors.put(fieldName, message);
         }
         
-        ApiResponse<Map<String, String>> response = ApiResponse.<Map<String, String>>error(
+        ApiResponse<Object> response = ApiResponse.error(
             "Validation failed", HttpStatus.BAD_REQUEST.value())
             .withPath(request.getDescription(false));
         response.setData(errors);
@@ -101,6 +101,21 @@ public class GlobalExceptionHandler {
             UserException ex, WebRequest request) {
         
         log.warn("User error: {}", ex.getMessage());
+        
+        ApiResponse<Object> response = ApiResponse.error(ex.getMessage(), HttpStatus.BAD_REQUEST.value())
+                .withPath(request.getDescription(false));
+        
+        return ResponseEntity.badRequest().body(response);
+    }
+
+    /**
+     * Handle booking-related exceptions
+     */
+    @ExceptionHandler(BookingException.class)
+    public ResponseEntity<ApiResponse<Object>> handleBookingException(
+            BookingException ex, WebRequest request) {
+        
+        log.warn("Booking error: {}", ex.getMessage());
         
         ApiResponse<Object> response = ApiResponse.error(ex.getMessage(), HttpStatus.BAD_REQUEST.value())
                 .withPath(request.getDescription(false));

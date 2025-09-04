@@ -1,0 +1,45 @@
+# Test profile configuration
+spring:
+  application:
+    name: ServeNow-Test
+  
+  # In-memory database for testing
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: password
+  
+  # JPA configuration for testing
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        format_sql: false
+  
+  # SQL initialization
+  sql:
+    init:
+      mode: never
+
+# JWT configuration for testing
+jwt:
+  secret: TestSecretKeyForJWTTokenGenerationInTestEnvironment2024!@#$%^&*
+  expiration: 3600000  # 1 hour
+  refresh-expiration: 86400000  # 24 hours
+
+# Server configuration for testing
+server:
+  port: 0  # Random port for testing
+  servlet:
+    context-path: /api
+
+# Logging configuration for testing
+logging:
+  level:
+    com.manvanth.servenow: INFO
+    org.springframework.security: WARN
+    org.hibernate.SQL: WARN

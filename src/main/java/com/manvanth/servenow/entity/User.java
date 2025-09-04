@@ -22,11 +22,19 @@ import java.util.stream.Collectors;
 @Entity
 @Table(name = "users")
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @ToString(exclude = {"password", "roles", "providedServices", "bookings", "reviews"})
 public class User extends BaseEntity implements UserDetails {
+
+    // Default constructor to ensure proper initialization
+    public User() {
+        super();
+        this.roles = new HashSet<>();
+        this.providedServices = new HashSet<>();
+        this.bookings = new HashSet<>();
+        this.reviews = new HashSet<>();
+    }
 
     @NotBlank(message = "First name is required")
     @Size(min = 2, max = 50, message = "First name must be between 2 and 50 characters")
@@ -170,5 +178,34 @@ public class User extends BaseEntity implements UserDetails {
 
     public boolean isAdmin() {
         return hasRole("ADMIN");
+    }
+
+    // Additional convenience methods
+    public Long getId() {
+        return super.getId();
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    public void setIsPhoneVerified(Boolean isPhoneVerified) {
+        this.isPhoneVerified = isPhoneVerified;
+    }
+
+    public void setIsEmailVerified(Boolean isEmailVerified) {
+        this.isEmailVerified = isEmailVerified;
+    }
+
+    public void setIsActive(Boolean isActive) {
+        super.setIsActive(isActive);
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
     }
 }

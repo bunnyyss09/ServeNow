@@ -223,4 +223,37 @@ public class Review extends BaseEntity {
         if (punctualityRating == null) punctualityRating = overallRating;
         if (valueRating == null) valueRating = overallRating;
     }
+
+    // Convenience methods for compatibility with simplified review service
+    public Long getServiceId() {
+        return service != null ? service.getId() : null;
+    }
+
+    public void setServiceId(Long serviceId) {
+        // This is a convenience method - actual service should be set via setService()
+    }
+
+    public Long getCustomerId() {
+        return customer != null ? customer.getId() : null;
+    }
+
+    public void setCustomerId(Long customerId) {
+        // This is a convenience method - actual customer should be set via setCustomer()
+    }
+
+    public Long getProviderId() {
+        return service != null ? service.getProvider().getId() : null;
+    }
+
+    public void setProviderId(Long providerId) {
+        // This is a convenience method - derived from service.provider
+    }
+
+    public Integer getRating() {
+        return overallRating != null ? overallRating.intValue() : null;
+    }
+
+    public void setRating(Integer rating) {
+        this.overallRating = rating != null ? new BigDecimal(rating) : null;
+    }
 }
