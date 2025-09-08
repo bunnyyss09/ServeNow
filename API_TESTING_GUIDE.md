@@ -1,4 +1,4 @@
-# 🚀 ServeNow API Testing Guide
+# ServeNow API Testing Guide
 
 ## Quick Start - Test the Platform in 5 Minutes
 
