@@ -3,7 +3,9 @@ package com.manvanth.servenow.controller;
 import com.manvanth.servenow.dto.request.ServiceRequest;
 import com.manvanth.servenow.dto.response.ApiResponse;
 import com.manvanth.servenow.dto.response.ServiceResponse;
+import com.manvanth.servenow.entity.User;
 import com.manvanth.servenow.service.ServiceListingService;
+import com.manvanth.servenow.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -30,6 +32,7 @@ import java.util.List;
 public class ServiceController {
 
     private final ServiceListingService serviceListingService;
+    private final UserService userService;
 
     @GetMapping
     @Operation(summary = "Get all services", description = "Get paginated list of all active services")
@@ -91,9 +94,10 @@ public class ServiceController {
     public ResponseEntity<ApiResponse<ServiceResponse>> createService(
             @Valid @RequestBody ServiceRequest request,
             @AuthenticationPrincipal UserDetails userDetails) {
-        // In a real app, we'd get the provider ID from the authenticated user
-        // For now, we'll assume it's passed in the request or get from userDetails
-        Long providerId = Long.valueOf(userDetails.getUsername()); // This is a simplified approach
+        // Get provider ID from the authenticated user
+        User provider = userService.findUserEntityByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        Long providerId = provider.getId();
         ServiceResponse service = serviceListingService.createService(providerId, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(service));
     }
@@ -106,7 +110,9 @@ public class ServiceController {
             @PathVariable Long serviceId,
             @Valid @RequestBody ServiceRequest request,
             @AuthenticationPrincipal UserDetails userDetails) {
-        Long providerId = Long.valueOf(userDetails.getUsername());
+        User provider = userService.findUserEntityByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        Long providerId = provider.getId();
         ServiceResponse service = serviceListingService.updateService(serviceId, providerId, request);
         return ResponseEntity.ok(ApiResponse.success(service));
     }
@@ -118,7 +124,9 @@ public class ServiceController {
     public ResponseEntity<ApiResponse<Object>> deleteService(
             @PathVariable Long serviceId,
             @AuthenticationPrincipal UserDetails userDetails) {
-        Long providerId = Long.valueOf(userDetails.getUsername());
+        User provider = userService.findUserEntityByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        Long providerId = provider.getId();
         serviceListingService.deleteService(serviceId, providerId);
         return ResponseEntity.ok(ApiResponse.success("Service deleted successfully"));
     }

@@ -68,15 +68,37 @@ public class HomeController {
      * Welcome message for root endpoint
      */
     @GetMapping
-    @Operation(summary = "Welcome message", description = "Get welcome message")
-    public ResponseEntity<ApiResponse<Map<String, String>>> welcome() {
-        Map<String, String> welcome = Map.of(
+    @Operation(summary = "Welcome message", description = "Get welcome message with quick start guide")
+    public ResponseEntity<ApiResponse<Map<String, Object>>> welcome() {
+        Map<String, Object> welcome = Map.of(
             "message", "Welcome to ServeNow API",
-            "description", "Local Service Finder Platform",
-            "documentation", "/swagger-ui.html"
+            "description", "Local Service Finder Platform - Connecting customers with service providers",
+            "documentation", "/swagger-ui.html",
+            "testingGuide", "Check API_TESTING_GUIDE.md for step-by-step testing",
+            "quickStart", Map.of(
+                "step1", "GET /health - Verify API is running",
+                "step2", "POST /auth/login with admin@servenow.com / admin123",
+                "step3", "GET /users/profile with JWT token",
+                "step4", "GET /categories - Browse service categories",
+                "step5", "Visit /swagger-ui.html for interactive testing"
+            ),
+            "preConfiguredUsers", Map.of(
+                "admin", "admin@servenow.com / admin123 (All permissions)"
+            ),
+            "mainEndpoints", Map.of(
+                "authentication", "/auth/* (register, login, validate)",
+                "userManagement", "/users/* (profile, search)",
+                "services", "/services/* (CRUD operations)",
+                "bookings", "/bookings/* (create, manage)",
+                "reviews", "/reviews/* (rate services)",
+                "categories", "/categories/* (browse)",
+                "search", "/search/* (find services)"
+            ),
+            "currency", "All prices in Indian Rupees (₹)",
+            "apiStatus", "✅ Online and Ready for Testing"
         );
         
-        ApiResponse<Map<String, String>> response = ApiResponse.success(
+        ApiResponse<Map<String, Object>> response = ApiResponse.success(
             "Welcome to ServeNow", welcome);
         
         return ResponseEntity.ok(response);

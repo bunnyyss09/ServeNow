@@ -11,10 +11,21 @@ RESTful API backend for a service marketplace platform similar to UrbanClap/Task
 mvn spring-boot:run
 ```
 
+Then open Swagger UI: `http://localhost:8080/swagger-ui.html`
+
+Authorize with JWT:
+- Login via `POST /auth/login`
+- Copy `accessToken`
+- In Swagger, click Authorize and paste only the token (no `Bearer `)
+
 ## Access Points
 - **API Base URL:** `http://localhost:8080`
 - **Swagger UI:** `http://localhost:8080/swagger-ui.html`
 - **API Docs:** `http://localhost:8080/api-docs`
+
+Admin credentials for testing:
+- Email: `admin@servenow.com`
+- Password: `admin123`
 
 ## Core Features
 - JWT Authentication & Role-based Authorization

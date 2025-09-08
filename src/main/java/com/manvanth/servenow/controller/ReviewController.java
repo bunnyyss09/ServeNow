@@ -3,7 +3,9 @@ package com.manvanth.servenow.controller;
 import com.manvanth.servenow.dto.request.ReviewRequest;
 import com.manvanth.servenow.dto.response.ApiResponse;
 import com.manvanth.servenow.dto.response.ReviewResponse;
+import com.manvanth.servenow.entity.User;
 import com.manvanth.servenow.service.ReviewService;
+import com.manvanth.servenow.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -28,6 +30,7 @@ import org.springframework.web.bind.annotation.*;
 public class ReviewController {
 
     private final ReviewService reviewService;
+    private final UserService userService;
 
     @PostMapping
     @PreAuthorize("hasRole('CUSTOMER')")
@@ -36,7 +39,9 @@ public class ReviewController {
     public ResponseEntity<ApiResponse<ReviewResponse>> createReview(
             @Valid @RequestBody ReviewRequest request,
             @AuthenticationPrincipal UserDetails userDetails) {
-        Long customerId = Long.valueOf(userDetails.getUsername());
+        User customer = userService.findUserEntityByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        Long customerId = customer.getId();
         ReviewResponse review = reviewService.createReview(customerId, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(review));
     }
@@ -71,7 +76,9 @@ public class ReviewController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @AuthenticationPrincipal UserDetails userDetails) {
-        Long customerId = Long.valueOf(userDetails.getUsername());
+        User customer = userService.findUserEntityByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        Long customerId = customer.getId();
         Pageable pageable = PageRequest.of(page, size);
         Page<ReviewResponse> reviews = reviewService.getCustomerReviews(customerId, pageable);
         return ResponseEntity.ok(ApiResponse.success(reviews));

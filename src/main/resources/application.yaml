@@ -2,6 +2,13 @@ spring:
   application:
     name: ServeNow
   
+  # Jackson Configuration
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+    time-zone: UTC
+    date-format: yyyy-MM-dd HH:mm:ss
+  
   # Database Configuration
   datasource:
     url: jdbc:mysql://localhost:3306/ServeNow?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
@@ -49,6 +56,25 @@ springdoc:
   swagger-ui:
     path: /swagger-ui.html
     operationsSorter: method
+    try-it-out-enabled: true
+    display-request-duration: true
+    display-operation-id: false
+    default-models-expand-depth: 1
+    default-model-expand-depth: 1
+    doc-expansion: none
+    filter: true
+    show-extensions: true
+    show-common-extensions: true
+    deep-linking: true
+    show-tags: true
+    tags-sorter: alpha
+    supported-submit-methods: ["get", "post", "put", "delete", "patch"]
+    custom-html: /swagger-ui-custom.html
+  show-actuator: true
+  default-produces-media-type: application/json
+  default-consumes-media-type: application/json
+  remove-broken-reference-definitions: true
+  disable-swagger-defaults: true
 
 # Server Configuration
 server:

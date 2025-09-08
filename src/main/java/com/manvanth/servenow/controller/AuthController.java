@@ -35,14 +35,23 @@ public class AuthController {
     @PostMapping("/register")
     @Operation(summary = "Register new user", description = "Create a new user account with customer or provider role")
     public ResponseEntity<ApiResponse<AuthResponse>> register(@Valid @RequestBody RegisterRequest registerRequest) {
+        log.info("=== REGISTRATION REQUEST RECEIVED ===");
         log.info("Registration request received for email: {}", registerRequest.getEmail());
+        log.info("User type: {}", registerRequest.getUserType());
         
-        AuthResponse authResponse = authService.register(registerRequest);
-        
-        ApiResponse<AuthResponse> response = ApiResponse.success(
-            "User registered successfully", authResponse);
-        
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        try {
+            log.info("Calling AuthService.register...");
+            AuthResponse authResponse = authService.register(registerRequest);
+            log.info("AuthService.register completed successfully");
+            
+            ApiResponse<AuthResponse> response = ApiResponse.success(
+                "User registered successfully", authResponse);
+            
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        } catch (Exception e) {
+            log.error("Registration failed with exception: {}", e.getMessage(), e);
+            throw e; // Re-throw to let global exception handler deal with it
+        }
     }
 
     /**

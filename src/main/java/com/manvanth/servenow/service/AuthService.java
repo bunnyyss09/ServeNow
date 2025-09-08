@@ -78,24 +78,36 @@ public class AuthService {
      * Register new user and generate JWT tokens
      */
     public AuthResponse register(RegisterRequest registerRequest) {
+        log.info("=== AUTHSERVICE REGISTER STARTED ===");
         log.info("Registering new user with email: {}", registerRequest.getEmail());
-
-        // Register user
-        UserResponse userResponse = userService.registerUser(registerRequest);
-
-        // Get user entity for token generation
-        User user = userService.findUserEntityById(userResponse.getId());
-
-        // Generate tokens
-        String accessToken = jwtService.generateAccessToken(user);
-        String refreshToken = jwtService.generateRefreshToken(user);
         
-        // Get token expiration
-        Long expiresIn = jwtService.getAccessTokenExpiration();
+        try {
+            log.info("Calling UserService.registerUser...");
+            // Register user
+            UserResponse userResponse = userService.registerUser(registerRequest);
+            log.info("UserService.registerUser completed successfully");
 
-        log.info("User registered and authenticated successfully: {}", user.getEmail());
+            log.info("Getting user entity for token generation...");
+            // Get user entity for token generation
+            User user = userService.findUserEntityById(userResponse.getId());
+            log.info("User entity retrieved successfully");
 
-        return new AuthResponse(accessToken, refreshToken, expiresIn, userResponse);
+            log.info("Generating JWT tokens...");
+            // Generate tokens
+            String accessToken = jwtService.generateAccessToken(user);
+            String refreshToken = jwtService.generateRefreshToken(user);
+            
+            // Get token expiration
+            Long expiresIn = jwtService.getAccessTokenExpiration();
+            log.info("JWT tokens generated successfully");
+
+            log.info("User registered and authenticated successfully: {}", user.getEmail());
+
+            return new AuthResponse(accessToken, refreshToken, expiresIn, userResponse);
+        } catch (Exception e) {
+            log.error("Registration failed in AuthService: {}", e.getMessage(), e);
+            throw e;
+        }
     }
 
     /**

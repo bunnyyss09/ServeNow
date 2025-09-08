@@ -76,7 +76,7 @@ INSERT IGNORE INTO users (
 ) VALUES (
     'System', 'Administrator', 'admin@servenow.com', 
     '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/lewUkfOARUPYKsE36', -- 'admin123'
-    '+1-555-0001',
+    '+15550001',
     '123 Admin Street', 'Admin City', 'AC', '12345', 'USA',
     true, true, true, true, true, true,
     NOW(), NOW(), true

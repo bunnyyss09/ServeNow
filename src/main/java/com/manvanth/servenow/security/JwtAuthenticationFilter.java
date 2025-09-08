@@ -41,8 +41,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String jwt;
         final String userEmail;
 
+        log.debug("JWT Filter processing request: {} {}", request.getMethod(), request.getRequestURI());
+        log.debug("Authorization header: {}", authHeader);
+
         // Check if Authorization header exists and starts with "Bearer "
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            log.debug("No valid Authorization header found, proceeding without authentication");
             filterChain.doFilter(request, response);
             return;
         }
@@ -105,12 +109,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
         
         // Skip JWT processing for these paths
-        return path.startsWith("/api/auth/login") ||
-               path.startsWith("/api/auth/register") ||
-               path.startsWith("/api/auth/refresh") ||
-               path.startsWith("/api/health") ||
-               path.startsWith("/api/info") ||
-               path.startsWith("/api/") && "GET".equals(request.getMethod()) && path.equals("/api/") ||
+        return path.startsWith("/auth/login") ||
+               path.startsWith("/auth/register") ||
+               path.startsWith("/auth/refresh") ||
+               path.startsWith("/health") ||
+               path.startsWith("/info") ||
+               path.startsWith("/ui") ||
                path.startsWith("/swagger-ui") ||
                path.startsWith("/v3/api-docs") ||
                path.startsWith("/api-docs") ||

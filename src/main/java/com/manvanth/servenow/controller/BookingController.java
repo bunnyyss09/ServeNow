@@ -3,7 +3,9 @@ package com.manvanth.servenow.controller;
 import com.manvanth.servenow.dto.request.BookingRequest;
 import com.manvanth.servenow.dto.response.ApiResponse;
 import com.manvanth.servenow.dto.response.BookingResponse;
+import com.manvanth.servenow.entity.User;
 import com.manvanth.servenow.service.BookingService;
+import com.manvanth.servenow.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -28,6 +30,7 @@ import org.springframework.web.bind.annotation.*;
 public class BookingController {
 
     private final BookingService bookingService;
+    private final UserService userService;
 
     @PostMapping
     @PreAuthorize("hasRole('CUSTOMER')")
@@ -36,7 +39,9 @@ public class BookingController {
     public ResponseEntity<ApiResponse<BookingResponse>> createBooking(
             @Valid @RequestBody BookingRequest request,
             @AuthenticationPrincipal UserDetails userDetails) {
-        Long customerId = Long.valueOf(userDetails.getUsername());
+        User customer = userService.findUserEntityByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        Long customerId = customer.getId();
         BookingResponse booking = bookingService.createBooking(customerId, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(booking));
     }
@@ -49,7 +54,9 @@ public class BookingController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @AuthenticationPrincipal UserDetails userDetails) {
-        Long customerId = Long.valueOf(userDetails.getUsername());
+        User customer = userService.findUserEntityByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        Long customerId = customer.getId();
         Pageable pageable = PageRequest.of(page, size);
         Page<BookingResponse> bookings = bookingService.getCustomerBookings(customerId, pageable);
         return ResponseEntity.ok(ApiResponse.success(bookings));
@@ -63,7 +70,9 @@ public class BookingController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @AuthenticationPrincipal UserDetails userDetails) {
-        Long providerId = Long.valueOf(userDetails.getUsername());
+        User provider = userService.findUserEntityByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        Long providerId = provider.getId();
         Pageable pageable = PageRequest.of(page, size);
         Page<BookingResponse> bookings = bookingService.getProviderBookings(providerId, pageable);
         return ResponseEntity.ok(ApiResponse.success(bookings));
@@ -76,7 +85,9 @@ public class BookingController {
     public ResponseEntity<ApiResponse<BookingResponse>> getBookingById(
             @PathVariable Long bookingId,
             @AuthenticationPrincipal UserDetails userDetails) {
-        Long userId = Long.valueOf(userDetails.getUsername());
+        User user = userService.findUserEntityByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        Long userId = user.getId();
         BookingResponse booking = bookingService.getBookingById(bookingId, userId);
         return ResponseEntity.ok(ApiResponse.success(booking));
     }
@@ -88,7 +99,9 @@ public class BookingController {
     public ResponseEntity<ApiResponse<BookingResponse>> acceptBooking(
             @PathVariable Long bookingId,
             @AuthenticationPrincipal UserDetails userDetails) {
-        Long providerId = Long.valueOf(userDetails.getUsername());
+        User provider = userService.findUserEntityByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        Long providerId = provider.getId();
         BookingResponse booking = bookingService.acceptBooking(bookingId, providerId);
         return ResponseEntity.ok(ApiResponse.success(booking));
     }
@@ -100,7 +113,9 @@ public class BookingController {
     public ResponseEntity<ApiResponse<BookingResponse>> rejectBooking(
             @PathVariable Long bookingId,
             @AuthenticationPrincipal UserDetails userDetails) {
-        Long providerId = Long.valueOf(userDetails.getUsername());
+        User provider = userService.findUserEntityByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        Long providerId = provider.getId();
         BookingResponse booking = bookingService.rejectBooking(bookingId, providerId);
         return ResponseEntity.ok(ApiResponse.success(booking));
     }
@@ -112,7 +127,9 @@ public class BookingController {
     public ResponseEntity<ApiResponse<BookingResponse>> completeBooking(
             @PathVariable Long bookingId,
             @AuthenticationPrincipal UserDetails userDetails) {
-        Long providerId = Long.valueOf(userDetails.getUsername());
+        User provider = userService.findUserEntityByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        Long providerId = provider.getId();
         BookingResponse booking = bookingService.completeBooking(bookingId, providerId);
         return ResponseEntity.ok(ApiResponse.success(booking));
     }
@@ -124,7 +141,9 @@ public class BookingController {
     public ResponseEntity<ApiResponse<BookingResponse>> cancelBooking(
             @PathVariable Long bookingId,
             @AuthenticationPrincipal UserDetails userDetails) {
-        Long customerId = Long.valueOf(userDetails.getUsername());
+        User customer = userService.findUserEntityByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        Long customerId = customer.getId();
         BookingResponse booking = bookingService.cancelBooking(bookingId, customerId);
         return ResponseEntity.ok(ApiResponse.success(booking));
     }

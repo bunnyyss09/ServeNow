@@ -2,9 +2,87 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>ServeNow API - Welcome</title>
+    <style>
+        body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 40px; color: #1f2937; }
+        .container { max-width: 880px; margin: 0 auto; }
+        h1 { margin-bottom: 8px; }
+        .muted { color: #6b7280; }
+        .card { border: 1px solid #e5e7eb; border-radius: 10px; padding: 20px; margin: 18px 0; }
+        code, .code { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 6px; padding: 2px 6px; }
+        a { color: #2563eb; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        ul { margin-top: 8px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+        .btn { display: inline-block; background: #2563eb; color: white; padding: 10px 14px; border-radius: 8px; }
+        .btn.secondary { background: #111827; }
+    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow" />
 </head>
 <body>
-    <h1>Hello guys</h1>
+    <div class="container">
+        <h1>ServeNow API</h1>
+        <div class="muted">Local Service Marketplace · Spring Boot</div>
+
+        <div class="card">
+            <h2>🚀 Quick Start Guide</h2>
+            <ol>
+                <li><strong>Open Swagger UI:</strong> <a href="/swagger-ui.html">Interactive API Documentation</a></li>
+                <li><strong>Get Token:</strong> Use <span class="code">POST /auth/login</span> with admin credentials:
+                    <div style="background:#f8f9fa; padding:8px; margin:4px 0; border-radius:4px; font-family:monospace; font-size:13px;">
+                        {"email":"admin@servenow.com","password":"admin123"}
+                    </div>
+                </li>
+                <li><strong>Authorize:</strong> Click "Authorize" button in Swagger UI and paste your token (without 'Bearer ' prefix)</li>
+                <li><strong>Test APIs:</strong> Try protected endpoints like <span class="code">GET /users/profile</span></li>
+            </ol>
+            <div style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap;">
+                <a class="btn" href="/swagger-ui.html">📚 Open Swagger UI</a>
+                <a class="btn secondary" href="/health">🏥 Health Check</a>
+            </div>
+        </div>
+
+        <div class="card" style="background:#e8f5e8; border-color:#28a745;">
+            <h3 style="color:#28a745; margin-top:0;">🔐 Authentication Tips</h3>
+            <ul style="margin:8px 0;">
+                <li>Copy the <strong>accessToken</strong> from login response</li>
+                <li>In Swagger UI, click <strong>"Authorize"</strong> button</li>
+                <li>Paste token directly (no "Bearer " prefix needed)</li>
+                <li>Click <strong>"Authorize"</strong> then <strong>"Close"</strong></li>
+            </ul>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <h3>Authentication</h3>
+                <ul>
+                    <li><code>POST /auth/register</code></li>
+                    <li><code>POST /auth/login</code></li>
+                    <li><code>POST /auth/refresh</code></li>
+                    <li><code>POST /auth/validate</code></li>
+                </ul>
+            </div>
+            <div class="card">
+                <h3>Users</h3>
+                <ul>
+                    <li><code>GET /users/profile</code></li>
+                    <li><code>PUT /users/profile</code></li>
+                    <li><code>PUT /users/change-password</code></li>
+                    <li><code>GET /users/providers</code></li>
+                </ul>
+            </div>
+            <div class="card">
+                <h3>Browse</h3>
+                <ul>
+                    <li><code>GET /categories</code></li>
+                    <li><code>GET /services</code></li>
+                    <li><code>GET /search?q=plumber</code></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="muted">Tip: All endpoints are documented in Swagger. Use the "Authorize" button there to paste your Bearer token.</div>
+    </div>
 </body>
 </html>
